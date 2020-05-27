@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wine Pairing</title>
+  </head>
+  <body>
+    <div>
+      <h1>Wine Pairing</h1>
+      <p>
+        Find a wine that goes well with a food. Food can be a dish name
+        ("steak"), an ingredient name ("salmon"), or a cuisine ("italian").
+      </p>
+    </div>
+    <div>
+      <input id="search" value="" /><button id="getPairing">
+        Search
+      </button>
+    </div>
+    <div id="output">
+      <p id="pairedWines"></p>
+
+      <p id="pairingText"></p>
+    </div>
+    <a href id="sourceLink"></a>
+
+    <script>
+      document
+        .getElementById("getPairing")
+        .addEventListener("click", getPairing);
+
+      async function getPairing() {
+        const wineSuggestion = document.getElementById("pairedWines");
+        const wineText = document.getElementById("pairingText");
+        const food = document.querySelector("#search").value;
+        console.log(food);
+
+        try {
+          const res = await fetch(
+            `https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/wine/pairing?food=${food}`,
+
+            {
+              method: "GET",
+              headers: {
+                "x-rapidapi-host":
+                  "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
+                "x-rapidapi-key":
+                  "b1a0cdbbdamsh5ed46a233af9927p1314dejsndde4aedcb331",
+
+                "Content-type": "application/json",
+              },
+            }
+          );
+          let suggestion = await res.json();
+          console.log(JSON.parse(JSON.stringify(suggestion)));
+          //wine.innerHTML = suggestion;
+          const pairedWines = suggestion.pairedWines;
+          const pairingText = suggestion.pairingText;
+          const productMatches = suggestion.productMatches;
+          // console.log(pairedWines);
+          wineSuggestion.innerHTML = pairedWines;
+          wineText.innerHTML = pairingText;
+          // wine.innerHTML = productMatches;
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    </script>
+  </body>
+</html>
